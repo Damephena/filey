@@ -1,6 +1,4 @@
 from django.contrib import admin
-from services.models import Link, Item
-# Register your models here.
+from services.models import Item
 
-admin.site.register((Link, Item))
-# admin.site.register(Item)
+admin.site.register(Item)
