@@ -46,11 +46,11 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('services/', include('services.urls')),
 
+    path('auth/password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),
+            name='password_reset_confirm'),
+    path('register/account-confirm-email/<key>/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
     path('drf/', include('rest_framework.urls')),
     path(r'auth/', include('dj_rest_auth.urls')),
-    re_path(r'^auth/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', PasswordResetConfirmView.as_view(),
-            name='password_reset_confirm'),
-    path('register/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
     path('register/', include('dj_rest_auth.registration.urls')),
 
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
