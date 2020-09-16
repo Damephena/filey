@@ -1,14 +1,10 @@
-from django.db.models import Q
-
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status, generics, permissions
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 
 import services.serializers as serializers
 import services.models as models
-from utils.permissions import IsFileOwnerOrAccessible
+from utils.permissions import IsFileOwnerOrAccessible, IsFileOwnerOrReadOnly
 
 
 class ItemViewset(viewsets.ModelViewSet):
@@ -30,7 +26,8 @@ class ItemViewset(viewsets.ModelViewSet):
     '''
     serializer_class = serializers.ItemSerializer
     parser_classes = [MultiPartParser]
-    permission_classes = [IsFileOwnerOrAccessible]
+    permission_classes = [IsFileOwnerOrReadOnly]
+    filterset_fields = ['name', 'created_at']
     search_fields = ['$name', '$created_at']
     ordering_fields = ['name', 'created_at']
 
@@ -55,17 +52,13 @@ class DownloadView(generics.RetrieveAPIView):
     serializer_class = serializers.ItemSerializer
     queryset = models.Item.objects.all()
     lookup_field = 'pk'
-    permission_classes = [IsFileOwnerOrAccessible, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsFileOwnerOrAccessible, permissions.AllowAny]
 
     def retrieve(self, request, pk):
         try:
-            query = models.Item.objects.filter(
-                (Q(id=pk) & Q(is_accessible=True)) |
-                (Q(id=pk) & Q(owner=self.request.user)))
-        except:
-            return Response('Download Item ID does not exist.')
+            query = models.Item.objects.get(id=pk, is_accessible=True)
+        except models.Item.DoesNotExist:
+            return Response('Invalid file ID or denied file access.')
 
-        if query.exists():
-            file = query[0].file.url
-            return Response(data=file, status=status.HTTP_200_OK)
-        return Response('You are not authorized')
+        file = query.file.url
+        return Response(data=file, status=status.HTTP_200_OK)
