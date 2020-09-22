@@ -27,7 +27,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'foo')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get('DEBUG') == 'True')
 
-ALLOWED_HOSTS = ['localhost', 'fileyy.herokuapp.com']
+ALLOWED_HOSTS = [
+    'localhost',
+    'fileyy.herokuapp.com',
+    'filey-env.eba-er3php2n.eu-west-2.elasticbeanstalk.com',
+]
 CSRF_COOKIE_SECURE = False
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -282,7 +286,7 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
