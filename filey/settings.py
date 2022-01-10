@@ -154,16 +154,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ORIGIN_WHITELIST = [
-    'http://fileyy.herokuapp.com',
-    'https://fileyy.herokuapp.com',
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-    'https://buyy.s3.eu-west-2.amazonaws.com'
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://fileyy.herokuapp.com',
+#     'https://fileyy.herokuapp.com',
+#     'http://localhost:8080',
+#     'http://127.0.0.1:8080',
+#     'https://buyy.s3.eu-west-2.amazonaws.com'
+# ]
 
 AUTHENTICATION_BACKENDS = [
    'django.contrib.auth.backends.ModelBackend',
